@@ -25,9 +25,12 @@ import type { ProposalDateInterface } from '@/types/proposals/proposalInterfaces
 // types, object and stores
 import { t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
+import { mapState } from 'pinia'
 // icons
 import ItemIcon from 'vue-material-design-icons/Calendar'
 import DestroyIcon from 'vue-material-design-icons/Close'
+import useSettingsStore from '../../store/settings.js'
+import { formatDate } from '../../utils/dateFormatter.js'
 
 export default {
 	name: 'ProposalDateItem',
@@ -52,6 +55,10 @@ export default {
 	emits: ['date-remove', 'date-focus'],
 
 	computed: {
+		...mapState(useSettingsStore, {
+			locale: 'momentLocale',
+		}),
+
 		formattedDate(): string {
 			if (!this.proposalDate.date) {
 				return ''
@@ -67,8 +74,7 @@ export default {
 				timezoneOffset = 0
 			}
 			const m = moment(this.proposalDate.date).utcOffset(timezoneOffset)
-			// Examples: "Mon, Jul 8, 2:30 PM" (en), "Mon, 8 Jul, 14:30" (en-GB), "Mo, 8. Jul, 14:30" (de)
-			return m.format('dddd, MMMM D, LT')
+			return formatDate(m.toDate(), 'dddd, MMMM D, LT', this.locale)
 		},
 	},
 

@@ -141,6 +141,7 @@ import IconTimezone from 'vue-material-design-icons/Web.vue'
 import DatePicker from '../../Shared/DatePicker.vue'
 import getTimezoneManager from '../../../services/timezoneDataProviderService.js'
 import useSettingsStore from '../../../store/settings.js'
+import { formatDate } from '../../../utils/dateFormatter.js'
 import { getDateFromDateTimeValue } from '@/utils/date'
 
 export default {
@@ -265,10 +266,10 @@ export default {
 		 */
 		formattedStart() {
 			if (this.isAllDay) {
-				return moment(this.startDate).locale(this.locale).format('ll')
+				return formatDate(this.startDate, 'll', this.locale)
 			}
 
-			return moment(this.startDate).locale(this.locale).format('lll')
+			return formatDate(this.startDate, 'lll', this.locale)
 		},
 
 		/**
@@ -277,10 +278,10 @@ export default {
 		 */
 		formattedEnd() {
 			if (this.isAllDay) {
-				return moment(this.endDate).locale(this.locale).format('ll')
+				return formatDate(this.endDate, 'll', this.locale)
 			}
 
-			return moment(this.endDate).locale(this.locale).format('lll')
+			return formatDate(this.endDate, 'lll', this.locale)
 		},
 
 		/**
@@ -316,7 +317,7 @@ export default {
 				return null
 			}
 
-			return moment(localDate).locale(this.locale).format('LT')
+			return formatDate(localDate, 'LT', this.locale)
 		},
 
 		subtitleEnd() {
@@ -328,7 +329,7 @@ export default {
 				return null
 			}
 
-			return moment(localDate).locale(this.locale).format('LT')
+			return formatDate(localDate, 'LT', this.locale)
 		},
 	},
 

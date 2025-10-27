@@ -130,6 +130,7 @@ import type { ProposalDate } from '@/models/proposals/proposals'
 
 import { t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
+import { mapState } from 'pinia'
 import CreateIcon from 'vue-material-design-icons/CalendarOutline'
 import VoteYesIcon from 'vue-material-design-icons/Check'
 import VoteNoIcon from 'vue-material-design-icons/Close'
@@ -138,6 +139,8 @@ import VoteNoneIcon from 'vue-material-design-icons/Minus'
 import NcAvatar from '@nextcloud/vue/components/NcAvatar'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import useSettingsStore from '../../store/settings.js'
+import { formatDate, usesPersianCalendar } from '../../utils/dateFormatter.js'
 import { Proposal, ProposalResponse } from '@/models/proposals/proposals'
 import { ProposalDateVote } from '@/types/proposals/proposalEnums'
 
@@ -189,6 +192,10 @@ export default {
 	},
 
 	computed: {
+		...mapState(useSettingsStore, {
+			locale: 'momentLocale',
+		}),
+
 		datesGrouped() {
 			if (!this.proposal) {
 				return []
@@ -211,7 +218,7 @@ export default {
 			})
 			return Object.entries(groups).map(([key, grp]: [string, ProposalDate[]]) => ({
 				key,
-				label: moment(grp[0].date).utcOffset(this.timezoneOffset).format('dddd, MMMM Do'),
+				label: formatDate(grp[0].date, 'dddd, MMMM Do', this.locale, { timezoneOffset: this.timezoneOffset }),
 				dates: grp,
 			}))
 		},
@@ -258,8 +265,8 @@ export default {
 			const startDate = moment(date).utcOffset(this.timezoneOffset)
 			const endDate = moment(date).utcOffset(this.timezoneOffset).add(this.proposal.duration, 'minutes')
 
-			const startTime = startDate.format('LT')
-			const endTime = endDate.format('LT')
+			const startTime = formatDate(startDate.toDate(), 'LT', this.locale)
+			const endTime = formatDate(endDate.toDate(), 'LT', this.locale)
 
 			return `${startTime} - ${endTime}`
 		},
@@ -280,6 +287,11 @@ export default {
 			}
 			// Apply timezone offset and format very compact: "7/8 2PM"
 			const adjustedDate = moment(date).utcOffset(this.timezoneOffset)
+
+			if (usesPersianCalendar(this.locale)) {
+				return formatDate(adjustedDate.toDate(), 'L LT', this.locale)
+			}
+
 			return adjustedDate.format('M/D LT').replace(':00', '').replace(' ', ' ')
 		},
 

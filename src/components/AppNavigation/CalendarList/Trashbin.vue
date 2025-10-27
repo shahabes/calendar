@@ -99,7 +99,6 @@
 
 <script>
 import { showError } from '@nextcloud/dialogs'
-import moment from '@nextcloud/moment'
 import {
 	NcActionButton,
 	NcActions,
@@ -114,6 +113,7 @@ import IconDelete from 'vue-material-design-icons/TrashCanOutline.vue'
 import useCalendarsStore from '../../../store/calendars.js'
 import useSettingsStore from '../../../store/settings.js'
 import { uidToHexColor } from '../../../utils/color.js'
+import { formatDate } from '../../../utils/dateFormatter.js'
 import logger from '../../../utils/logger.js'
 
 export default {
@@ -140,6 +140,7 @@ export default {
 		...mapStores(useCalendarsStore),
 		...mapState(useSettingsStore, {
 			timezoneObject: 'getResolvedTimezoneObject',
+			locale: 'momentLocale',
 		}),
 
 		calendars() {
@@ -172,9 +173,9 @@ export default {
 					const event = vobject?.calendarComponent.getFirstComponent('VEVENT')
 					const utcOffset = (event?.startDate.getInTimezone(this.timezoneObject).utcOffset() ?? 0) / 60
 					if (event?.startDate.jsDate && event?.isAllDay()) {
-						subline += ' · ' + moment(event.startDate.jsDate).utcOffset(utcOffset).format('LL')
+						subline += ' · ' + formatDate(event.startDate.jsDate, 'LL', this.locale, { timezoneOffset: utcOffset })
 					} else if (event?.startDate.jsDate) {
-						subline += ' · ' + moment(event?.startDate.jsDate).utcOffset(utcOffset).format('LLL')
+						subline += ' · ' + formatDate(event?.startDate.jsDate, 'LLL', this.locale, { timezoneOffset: utcOffset })
 					}
 				}
 				const color = vobject.calendarComponent.getComponentIterator().next().value?.color

@@ -5,17 +5,18 @@ import { createPlugin } from '@fullcalendar/core'
  */
 import moment from '@nextcloud/moment'
 import useSettingsStore from '../../store/settings.js'
+import { formatDate, usesPersianCalendar } from '../../utils/dateFormatter.js'
 
-/**
- * Creates a new moment object using the locale from the global Pinia store
- *
- * @param {object[]} data FullCalendar object containing the date etc.
- * @param {number[]} data.array Input data to initialize moment
- * @return {moment.Moment}
- */
-function momentFactory({ array }) {
+function formatDateInfo(cmdStr, dateInfo) {
 	const settingsStore = useSettingsStore()
-	return moment(array).locale(settingsStore.momentLocale)
+	const locale = settingsStore.momentLocale
+
+	if (usesPersianCalendar(locale)) {
+		const jsDate = moment(dateInfo.array).toDate()
+		return formatDate(jsDate, cmdStr, locale)
+	}
+
+	return moment(dateInfo.array).locale(locale).format(cmdStr)
 }
 
 /**
@@ -37,8 +38,8 @@ function cmdFormatter(cmdStr, arg) {
 
 	// If arg.end is defined, this is a time-range
 	if (arg.end) {
-		const start = momentFactory(arg.start).format(cmdStr)
-		const end = momentFactory(arg.end).format(cmdStr)
+		const start = formatDateInfo(cmdStr, arg.start)
+		const end = formatDateInfo(cmdStr, arg.end)
 
 		if (start === end) {
 			return start
@@ -47,7 +48,7 @@ function cmdFormatter(cmdStr, arg) {
 		return start + arg.defaultSeparator + end
 	}
 
-	return momentFactory(arg.start).format(cmdStr)
+	return formatDateInfo(cmdStr, arg.start)
 }
 
 export default createPlugin({
