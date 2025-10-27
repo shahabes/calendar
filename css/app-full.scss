@@ -379,3 +379,93 @@ textarea {
 .property-select__input {
 	height: 34px;
 }
+
+.date-time-picker {
+        --date-time-picker-accent-rgb: 255, 59, 48;
+        --date-time-picker-accent: rgb(var(--date-time-picker-accent-rgb));
+        --date-time-picker-contrast: #ffffff;
+
+        .mx-input {
+                border-color: var(--date-time-picker-accent);
+                color: var(--date-time-picker-accent);
+        }
+
+        .mx-input:hover,
+        .mx-input:focus {
+                border-color: var(--date-time-picker-accent);
+                box-shadow: 0 0 0 2px rgba(var(--date-time-picker-accent-rgb), 0.2);
+        }
+
+        .mx-icon-calendar,
+        .mx-icon-clear {
+                color: var(--date-time-picker-accent);
+        }
+
+        .native-datetime-picker--input {
+                border-color: var(--date-time-picker-accent);
+                color: var(--date-time-picker-accent);
+        }
+
+        .native-datetime-picker--input:hover,
+        .native-datetime-picker--input:focus,
+        .native-datetime-picker--input:active {
+                border-color: var(--date-time-picker-accent);
+                box-shadow: 0 0 0 2px rgba(var(--date-time-picker-accent-rgb), 0.2) !important;
+        }
+
+        .mx-datepicker-main,
+        .mx-datepicker-footer,
+        .mx-datepicker-header,
+        .mx-calendar + .mx-calendar {
+                border-color: rgba(var(--date-time-picker-accent-rgb), 0.4);
+        }
+
+        .mx-calendar-header,
+        .mx-calendar-header-label,
+        .mx-table th,
+        .mx-table-date .today {
+                color: var(--date-time-picker-accent);
+        }
+
+        .mx-btn {
+                border-color: rgba(var(--date-time-picker-accent-rgb), 0.4);
+                color: var(--date-time-picker-accent);
+        }
+
+        .mx-btn:hover,
+        .mx-btn:focus {
+                border-color: var(--date-time-picker-accent);
+                color: var(--date-time-picker-accent);
+                background-color: rgba(var(--date-time-picker-accent-rgb), 0.1);
+        }
+
+        .mx-calendar-content {
+                .cell:not(.disabled):hover,
+                .cell.hover-in-range:not(.disabled) {
+                        color: var(--date-time-picker-accent);
+                        background-color: rgba(var(--date-time-picker-accent-rgb), 0.15);
+                }
+
+                .cell.active {
+                        color: var(--date-time-picker-contrast);
+                        background-color: var(--date-time-picker-accent);
+                }
+
+                .cell.in-range {
+                        color: var(--date-time-picker-accent);
+                        background-color: rgba(var(--date-time-picker-accent-rgb), 0.12);
+                }
+        }
+
+        .mx-calendar-week-mode {
+                .mx-date-row:hover {
+                        background-color: rgba(var(--date-time-picker-accent-rgb), 0.15);
+                        color: var(--date-time-picker-accent);
+                }
+
+                .mx-date-row.mx-active-week {
+                        background-color: var(--date-time-picker-accent);
+                        color: var(--date-time-picker-contrast);
+                }
+        }
+}
