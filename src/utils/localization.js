@@ -1,16 +1,23 @@
 import {
-	getDayNames,
-	getDayNamesMin,
-	getDayNamesShort,
-	getFirstDay,
-	getMonthNames,
-	getMonthNamesShort,
+        getDayNames,
+        getDayNamesMin,
+        getDayNamesShort,
+        getFirstDay,
+        getMonthNames,
+        getMonthNamesShort,
 } from '@nextcloud/l10n'
 /**
  * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 import moment from '@nextcloud/moment'
+import {
+        PERSIAN_MONTHS,
+        PERSIAN_MONTHS_SHORT,
+        PERSIAN_WEEKDAYS,
+        PERSIAN_WEEKDAYS_MIN,
+        PERSIAN_WEEKDAYS_SHORT,
+} from './persianCalendar.js'
 
 /**
  * Maps a moment locale to a vue2-datepicker locale
@@ -21,27 +28,30 @@ import moment from '@nextcloud/moment'
  * @return {object} The vue2-datepicker lang object
  */
 function getLangConfigForVue2DatePicker(momentLocale) {
-	const dateFormat = moment.localeData(momentLocale)
-		.longDateFormat('L')
-		.toUpperCase()
+        const localeData = moment.localeData(momentLocale)
+        const dateFormat = localeData
+                .longDateFormat('L')
+                .toUpperCase()
 
-	return {
-		formatLocale: {
-			months: getMonthNames(),
-			monthsShort: getMonthNamesShort(),
-			weekdays: getDayNames(),
-			weekdaysShort: getDayNamesShort(),
-			weekdaysMin: getDayNamesMin(),
-			firstDayOfWeek: getFirstDay(),
-			firstWeekContainsDate: moment.localeData(momentLocale).firstDayOfYear(),
-			meridiem: moment.localeData(momentLocale).meridiem,
-			meridiemParse: moment.localeData(momentLocale).meridiemParse,
-			isPM: moment.localeData(momentLocale).isPM,
-		},
-		yearFormat: 'YYYY',
-		monthFormat: 'MMM',
-		monthBeforeYear: dateFormat.indexOf('M') < dateFormat.indexOf('Y'),
-	}
+        const usePersianCalendar = momentLocale?.startsWith('fa')
+
+        return {
+                formatLocale: {
+                        months: usePersianCalendar ? PERSIAN_MONTHS : getMonthNames(),
+                        monthsShort: usePersianCalendar ? PERSIAN_MONTHS_SHORT : getMonthNamesShort(),
+                        weekdays: usePersianCalendar ? PERSIAN_WEEKDAYS : getDayNames(),
+                        weekdaysShort: usePersianCalendar ? PERSIAN_WEEKDAYS_SHORT : getDayNamesShort(),
+                        weekdaysMin: usePersianCalendar ? PERSIAN_WEEKDAYS_MIN : getDayNamesMin(),
+                        firstDayOfWeek: getFirstDay(),
+                        firstWeekContainsDate: localeData.firstDayOfYear(),
+                        meridiem: localeData.meridiem,
+                        meridiemParse: localeData.meridiemParse,
+                        isPM: localeData.isPM,
+                },
+                yearFormat: 'YYYY',
+                monthFormat: 'MMM',
+                monthBeforeYear: dateFormat.indexOf('M') < dateFormat.indexOf('Y'),
+        }
 }
 
 export {
