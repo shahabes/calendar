@@ -2,7 +2,7 @@
  * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-import moment from '@nextcloud/moment'
+import { formatDate } from '../utils/dateFormatter.js'
 
 /**
  * Formats a date object
@@ -14,8 +14,8 @@ import moment from '@nextcloud/moment'
  */
 export default (value, isAllDay, locale) => {
 	if (isAllDay) {
-		return moment(value).locale(locale).format('ll')
+		return formatDate(value, 'll', locale)
 	} else {
-		return moment(value).locale(locale).format('lll')
+		return formatDate(value, 'lll', locale)
 	}
 }

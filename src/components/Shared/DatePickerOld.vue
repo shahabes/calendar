@@ -93,6 +93,7 @@ import IconNewCalendar from 'vue-material-design-icons/CalendarBlankOutline.vue'
 import IconTimezone from 'vue-material-design-icons/Web.vue'
 import useDavRestrictionsStore from '../../store/davRestrictions.js'
 import useSettingsStore from '../../store/settings.js'
+import { formatDate } from '../../utils/dateFormatter.js'
 import { getLangConfigForVue2DatePicker } from '../../utils/localization.js'
 
 export default {
@@ -295,8 +296,8 @@ export default {
 		 * @return {string}
 		 */
 		stringify(date) {
-			const formattedDate = moment(date).locale(this.locale).format('L')
-			const formattedTime = moment(date).locale(this.locale).format('LT')
+			const formattedDate = formatDate(date, 'L', this.locale)
+			const formattedTime = formatDate(date, 'LT', this.locale)
 
 			if (this.isAllDay) {
 				switch (this.prefix) {

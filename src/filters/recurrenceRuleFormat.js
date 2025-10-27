@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 import { getDayNames, getMonthNames, translatePlural as n, translate as t } from '@nextcloud/l10n'
-import moment from '@nextcloud/moment'
+import { formatDate } from '../utils/dateFormatter.js'
 
 /**
  * Formats a recurrence-rule
@@ -104,7 +104,7 @@ export default (recurrenceRule, locale) => {
 
 	let endPart = ''
 	if (recurrenceRule.until !== null) {
-		const untilDate = moment(recurrenceRule.until).locale(locale).format('L')
+		const untilDate = formatDate(recurrenceRule.until, 'L', locale)
 
 		endPart = t('calendar', 'until {untilDate}', {
 			untilDate,

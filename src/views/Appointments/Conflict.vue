@@ -28,6 +28,9 @@
 <script>
 
 import moment from '@nextcloud/moment'
+import { mapState } from 'pinia'
+import useSettingsStore from '../../store/settings.js'
+import { formatDate } from '../../utils/dateFormatter.js'
 
 export default {
 	name: 'Conflict',
@@ -54,12 +57,16 @@ export default {
 	},
 
 	computed: {
+		...mapState(useSettingsStore, {
+			locale: 'momentLocale',
+		}),
+
 		startDate() {
-			return moment(this.start * 1000).format('LLL')
+			return formatDate(moment(this.start * 1000).toDate(), 'LLL', this.locale)
 		},
 
 		endDate() {
-			return moment(this.end * 1000).format('LLL')
+			return formatDate(moment(this.end * 1000).toDate(), 'LLL', this.locale)
 		},
 	},
 }

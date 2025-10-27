@@ -268,6 +268,7 @@ import ProposalDateItem from '@/components/Proposal/ProposalDateItem.vue'
 import ProposalParticipantItem from '@/components/Proposal/ProposalParticipantItem.vue'
 import ProposalResponseMatrix from '@/components/Proposal/ProposalResponseMatrix.vue'
 import { getBusySlots } from '../../services/freeBusySlotService.js'
+import { formatDate, usesPersianCalendar } from '../../utils/dateFormatter.js'
 import FullCalendarMoment from '@/fullcalendar/localization/momentPlugin.js'
 import FullCalendarTimezones from '@/fullcalendar/timezones/vtimezoneNamedTimezoneImpl.js'
 import { ProposalDate, ProposalParticipant } from '@/models/proposals/proposals'
@@ -483,19 +484,21 @@ export default {
 			const view = this.calendarApi.view
 			const start = view.activeStart
 			const end = new Date(view.activeEnd.getTime() - 1) // Subtract 1ms to get the last day shown
+			const locale = this.settingsStore?.momentLocale
 
 			// Format start date
-			const startFormatted = moment(start).format('MMMM D')
+			const startFormatted = formatDate(start, 'MMMM D', locale)
 
 			// If same month, just show day number for end
 			if (start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear()) {
-				return `${startFormatted} to ${end.getDate()}`
+				const endDay = usesPersianCalendar(locale) ? formatDate(end, 'D', locale) : end.getDate()
+				return `${startFormatted} to ${endDay}`
 			}
 
 			// Different months or years, show full format for both
-			const endFormatted = moment(end).format('MMMM D')
+			const endFormatted = formatDate(end, 'MMMM D', locale)
 			if (start.getFullYear() !== end.getFullYear()) {
-				return `${moment(start).format('MMMM D, YYYY')} to ${moment(end).format('MMMM D, YYYY')}`
+				return `${formatDate(start, 'MMMM D, YYYY', locale)} to ${formatDate(end, 'MMMM D, YYYY', locale)}`
 			}
 
 			return `${startFormatted} to ${endFormatted}`
@@ -999,7 +1002,7 @@ export default {
 				return ''
 			}
 			// Examples: "Mon, Jul 8, 2:30 PM" (en), "Mon, 8 Jul, 14:30" (en-GB), "Mo, 8. Jul, 14:30" (de)
-			return moment(date).format('dddd, MMMM D, LT')
+			return formatDate(date, 'dddd, MMMM D, LT', this.settingsStore?.momentLocale)
 		},
 
 	},

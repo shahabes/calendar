@@ -5,6 +5,7 @@
 
 import { translatePlural as n, translate as t } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
+import { formatDate } from '../utils/dateFormatter.js'
 
 /**
  * Formats an alarm
@@ -28,7 +29,7 @@ export default (alarm, isAllDay, currentUserTimezone, locale) => {
 			date.setMinutes(alarm.relativeMinutesAllDay)
 			date.setSeconds(0)
 			date.setMilliseconds(0)
-			const formattedHourMinute = moment(date).locale(locale).format('LT')
+			const formattedHourMinute = formatDate(date, 'LT', locale)
 
 			if (alarm.relativeTrigger < 0) {
 				if (alarm.relativeUnitAllDay === 'days') {
@@ -86,11 +87,11 @@ export default (alarm, isAllDay, currentUserTimezone, locale) => {
 		// absolute trigger
 		if (currentUserTimezone === alarm.absoluteTimezoneId) {
 			return t('calendar', 'on {time}', {
-				time: moment(alarm.absoluteDate).locale(locale).format('LLLL'),
+				time: formatDate(alarm.absoluteDate, 'LLLL', locale),
 			})
 		} else {
 			return t('calendar', 'on {time} ({timezoneId})', {
-				time: moment(alarm.absoluteDate).locale(locale).format('LLLL'),
+				time: formatDate(alarm.absoluteDate, 'LLLL', locale),
 				timezoneId: alarm.absoluteTimezoneId,
 			})
 		}

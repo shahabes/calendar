@@ -18,6 +18,9 @@
 <script>
 import moment from '@nextcloud/moment'
 import { NcButton } from '@nextcloud/vue'
+import { mapState } from 'pinia'
+import useSettingsStore from '../../../store/settings.js'
+import { formatDate } from '../../../utils/dateFormatter.js'
 
 export default {
 	name: 'EmbedHeaderTodayButton',
@@ -26,8 +29,16 @@ export default {
 	},
 
 	computed: {
+		...mapState(useSettingsStore, {
+			locale: 'momentLocale',
+		}),
+
 		title() {
-			return moment().format('ll')
+			if (this.locale?.startsWith('fa')) {
+				return formatDate(moment().toDate(), 'll', this.locale)
+			}
+
+			return moment().locale(this.locale).format('ll')
 		},
 	},
 

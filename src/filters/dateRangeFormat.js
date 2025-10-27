@@ -4,6 +4,7 @@ import { translate as t } from '@nextcloud/l10n'
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 import moment from '@nextcloud/moment'
+import { formatDate } from '../utils/dateFormatter.js'
 
 /**
  * Formats a date-range depending on the user's current view
@@ -16,7 +17,7 @@ import moment from '@nextcloud/moment'
 export default (value, view, locale) => {
 	switch (view) {
 		case 'timeGridDay':
-			return moment(value).locale(locale).format('ll')
+			return formatDate(value, 'll', locale)
 
 		case 'timeGridWeek':
 			return t('calendar', 'Week {number} of {year}', {
@@ -25,11 +26,11 @@ export default (value, view, locale) => {
 			})
 
 		case 'multiMonthYear':
-			return moment(value).locale(locale).format('YYYY')
+			return formatDate(value, 'YYYY', locale)
 
 		case 'dayGridMonth':
 		case 'listMonth':
 		default:
-			return moment(value).locale(locale).format('MMMM YYYY')
+			return formatDate(value, 'MMMM YYYY', locale)
 	}
 }
